@@ -1,4 +1,8 @@
 # app.py
+
+import sys
+sys.path.append('./src')
+
 from data_preprocessing import load_data, preprocess_data
 from gnn_model import create_graph_data, train_model
 import webbrowser
