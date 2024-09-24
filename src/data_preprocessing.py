@@ -10,19 +10,26 @@ def load_data(file_path):
     
     return df
 
-def clean_financial_data(df, columns):
-    """Clean dollar signs and commas from financial data."""
-    for col in columns:
+def clean_financial_data(df, financial_columns, percentage_columns):
+    """Clean dollar signs, commas, and percentage signs from financial and percentage data."""
+    for col in financial_columns:
         df[col] = df[col].replace({'\$': '', ',': ''}, regex=True).astype(float)
+
+    for col in percentage_columns:
+        df[col] = df[col].replace({'%': ''}, regex=True).astype(float)
+    
     return df
 
+# data_preprocessing.py
+
 def preprocess_data(df):
-    # List of financial features that need cleaning
+    # List of financial and percentage features
     financial_features = ['Income Level', 'Account Balance', 'Deposits', 'Withdrawals', 'Transfers', 
                           'International Transfers', 'Investments', 'Loan Amount']
+    percentage_features = ['Interest Rate']
 
-    # Clean financial data
-    df = clean_financial_data(df, financial_features)
+    # Clean financial and percentage data
+    df = clean_financial_data(df, financial_features, percentage_features)
 
     # Handle categorical data
     df['occupation_encoded'] = LabelEncoder().fit_transform(df['Occupation'])
@@ -30,9 +37,15 @@ def preprocess_data(df):
     df['loan_status_encoded'] = LabelEncoder().fit_transform(df['Loan Status'])
     df = pd.get_dummies(df, columns=['Investment Goals', 'Loan Purpose', 'Employment Status'])
 
-    # Scale numeric features
+    # Drop columns that are still of object type (e.g., Address, Transaction Description)
+    df = df.select_dtypes(exclude=['object'])
+
+    # Scale numeric features and rename them for clarity
     scaler = StandardScaler()
-    df[financial_features + ['Age', 'Loan Term (Months)', 'Interest Rate']] = scaler.fit_transform(df[financial_features + ['Age', 'Loan Term (Months)', 'Interest Rate']])
+    df[['age_scaled', 'income_scaled', 'account_balance_scaled', 'loan_term_scaled', 'interest_rate_scaled']] = scaler.fit_transform(df[['Age', 'Income Level', 'Account Balance', 'Loan Term (Months)', 'Interest Rate']])
+
+    # Drop the original columns after renaming
+    df.drop(['Age', 'Income Level', 'Account Balance', 'Loan Term (Months)', 'Interest Rate'], axis=1, inplace=True)
 
     return df
 

@@ -17,21 +17,24 @@ class GNN(torch.nn.Module):
         x = self.conv2(x, edge_index)
         return F.log_softmax(x, dim=1)
 
+# gnn_model.py
 def create_graph_data(df):
-    # Example: Create edges based on large financial transfers or same occupation
-    edge_index = torch.tensor([
-        [0, 1], [1, 0],  # Link between customers with large transfers
-        [2, 3], [3, 2],  # Link between customers with same occupation
-    ], dtype=torch.long)
-    
-    # Select relevant node features
-    feature_columns = ['age_scaled', 'income_scaled', 'account_balance', 'occupation_encoded', 
-                       'risk_tolerance_encoded', 'loan_status_encoded']
+    # Use the scaled column names as used in the renaming step
+    feature_columns = ['age_scaled', 'income_scaled', 'account_balance_scaled', 'occupation_encoded', 
+                       'risk_tolerance_encoded', 'loan_status_encoded', 'loan_term_scaled', 'interest_rate_scaled']
+
     x = torch.tensor(df[feature_columns].values, dtype=torch.float)
     
     y = torch.tensor(df['fraud'].values, dtype=torch.long)
-    
+
+    # Example edge index
+    edge_index = torch.tensor([
+        [0, 1], [1, 0],
+        [2, 3], [3, 2]
+    ], dtype=torch.long)
+
     return Data(x=x, edge_index=edge_index.t().contiguous(), y=y)
+
 
 def train_model(data):
     model = GNN(input_dim=data.num_features, hidden_dim=16, output_dim=2)

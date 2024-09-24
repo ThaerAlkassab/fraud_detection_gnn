@@ -1,19 +1,27 @@
 # explainability.py
+
 import shap
 import torch
-from gnn_model import GNN, create_graph_data
+from gnn_model import GNN
 from data_preprocessing import load_data, preprocess_data
 
-df = load_data('../data/5k.csv')
+# Load and preprocess data
+df = load_data('./data/5k.csv')
 df = preprocess_data(df)
-graph_data = create_graph_data(df)
 
-model = GNN(input_dim=graph_data.num_features, hidden_dim=16, output_dim=2)
+# Check for non-numeric columns
+print(df.dtypes)  # This will print the data types of each column to ensure they are numeric
+
+# Assume the model is already trained
+model = GNN(input_dim=df.shape[1], hidden_dim=16, output_dim=2)
 model.eval()
 
+# Convert DataFrame to tensor
+graph_data = torch.tensor(df.values, dtype=torch.float)
+
 # Use SHAP to explain predictions
-explainer = shap.DeepExplainer(model, graph_data.x)
-shap_values = explainer.shap_values(graph_data.x)
+explainer = shap.DeepExplainer(model, graph_data)
+shap_values = explainer.shap_values(graph_data)
 
 # Plot summary of the SHAP values
-shap.summary_plot(shap_values, graph_data.x.numpy(), feature_names=['Age', 'Income', 'Account Balance', 'Occupation', 'Risk Tolerance', 'Loan Status'])
+shap.summary_plot(shap_values, graph_data.numpy(), feature_names=df.columns)
