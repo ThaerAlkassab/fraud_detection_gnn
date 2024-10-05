@@ -1,7 +1,12 @@
 torch
 torch-geometric
-numpy
-pandas
+torch-sparse
+torch-scatter
+torch-cluster
+torch-spline-conv
 scikit-learn
-shap
+pandas
+numpy
 matplotlib
+seaborn
+notebook
