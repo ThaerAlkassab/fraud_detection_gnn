@@ -2,6 +2,24 @@
 
 This project demonstrates how to use **Graph Neural Networks (GNNs)** to detect fraudulent credit card transactions, leveraging **Explainable AI (XAI)** techniques such as **SHAP** and **GNNExplainer** for better interpretability. The models used include **GEARSage** and **TGAT**, and the project provides comprehensive visualizations for data exploration and model performance.
 
+## Table of Contents
+
+1. [Project Overview](#project-overview)
+2. [Key Features](#key-features)
+3. [Project Structure](#project-structure)
+4. [Dataset](#dataset)
+5. [Installation](#installation)
+6. [Usage](#usage)
+   - [Training the Model](#1-training-the-gnn-model)
+   - [Testing the Model](#2-testing-the-model)
+   - [Making Predictions](#3-making-predictions)
+   - [Visualizing Dataset Characteristics](#4-visualizing-dataset-characteristics)
+   - [Visualizing Model Performance](#5-visualizing-model-performance)
+   - [Running Unit Tests](#6-running-unit-tests)
+7. [Visualizations](#visualizations)
+8. [License](#license)
+9. [Acknowledgments](#acknowledgments)
+
 ## Project Overview
 
 - **Data Preprocessing**: Loading and preprocessing the credit card fraud dataset.
